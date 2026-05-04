@@ -2,6 +2,7 @@ services:
   - type: web
     name: upi-fraud-detector
     env: node
+    rootDir: upi-fraud-detector
     # Build command installs dependencies for both backend and frontend, then builds the React app
     buildCommand: npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend
     # Start command launches the backend server, which will also serve the built frontend
