@@ -15,6 +15,7 @@
 
 const express = require('express');
 const cors    = require('cors');
+const path    = require('path');
 const { v4: uuidv4 } = require('crypto').webcrypto ? 
   { v4: () => require('crypto').randomUUID() } : 
   { v4: () => require('crypto').randomUUID() };
@@ -163,6 +164,17 @@ app.delete('/api/reset', (req, res) => {
   store.resetStore();
   res.json({ message: 'Store reset successfully' });
 });
+
+// ── Serve Frontend in Production ──────────────────────────────────────────────
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the React frontend build
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+  // Catch-all route to serve the React app for any unhandled requests
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  });
+}
 
 // ── Start Server ──────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
